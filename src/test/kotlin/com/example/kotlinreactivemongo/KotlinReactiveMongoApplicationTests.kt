@@ -26,6 +26,8 @@ class KotlinReactiveMongoApplicationTests {
     @Before
     fun init() {
         userRepository.deleteAll()
+        var user = User(ObjectId().toString(), "username1", "password", "username1@mail.com")
+        userRepository.insert(Mono.just(user))
     }
 
     @Test
@@ -52,10 +54,8 @@ class KotlinReactiveMongoApplicationTests {
                 .expectComplete()
                 .verify()
 
-
         var id0 = userRepository.findAll().toStream().findFirst().get().id
         var user2 = User(id0, "SUPER_USER", "password", "username1@mail.com")
-
 
         // PUT
         webTestClient.put().uri("/users")
@@ -68,7 +68,6 @@ class KotlinReactiveMongoApplicationTests {
                 .expectBody()
                 .jsonPath("$[0].username").isEqualTo("SUPER_USER")
                 .jsonPath("$[0].email").isEqualTo("username1@mail.com")
-
 
         // GET ALL
         webTestClient.get().uri("/users")
@@ -83,7 +82,7 @@ class KotlinReactiveMongoApplicationTests {
 
         var id = userRepository.findAll().toStream().findFirst().get().id
 
-        // DLEETE
+        // DELETE
         webTestClient.delete().uri("/users/$id")
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()
