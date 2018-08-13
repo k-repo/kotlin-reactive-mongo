@@ -1,93 +1,73 @@
-package com.example.kotlinreactivemongo
+package fr.kza.backend.api.web
 
-import junit.framework.Assert.assertEquals
-import org.bson.types.ObjectId
-import org.junit.Before
+import com.example.kotlinreactivemongo.KotlinReactiveMongoApplication
+import com.example.kotlinreactivemongo.api.rest.TestRestController
+import com.example.kotlinreactivemongo.config.mongo.MongoConfiguration
+import com.example.kotlinreactivemongo.config.security.jwt.JwtAuthenticationRequest
+import com.example.kotlinreactivemongo.config.security.service.UserReactiveCrudRepository
+import com.example.kotlinreactivemongo.config.web.WebConfig
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.http.MediaType
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
-import reactor.test.StepVerifier
 
 @RunWith(SpringRunner::class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class KotlinReactiveMongoApplicationTests {
+@WebFluxTest(TestRestController::class)
+//@SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ContextConfiguration(classes = arrayOf(KotlinReactiveMongoApplication::class, MongoConfiguration::class))
+class BackendApplicationTests {
+
+    private val logger = LoggerFactory.getLogger(this.javaClass)
 
     @Autowired
-    lateinit var webTestClient: WebTestClient
-
-    @Autowired
-    lateinit var userRepository: UserRepository
-
-    @Before
-    fun init() {
-        userRepository.deleteAll()
-        var user = User(ObjectId().toString(), "username1", "password", "username1@mail.com")
-        userRepository.insert(Mono.just(user))
-    }
+    private val webTestClient: WebTestClient? = null
 
     @Test
-    fun testUserRouter() {
-        var user = User(ObjectId().toString(), "username1", "password", "username1@mail.com")
-
-        // POST
-        webTestClient.post().uri("/users")
+    fun fetchUsers() {
+        val jwtAuthenticationRequest = JwtAuthenticationRequest("jdev", "jdev")
+        val result1 = webTestClient!!
+                .post().uri("/auth/token")
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(user), User::class.java)
+                .body(Mono.just(jwtAuthenticationRequest), JwtAuthenticationRequest::class.java)
                 .exchange()
                 .expectStatus().isOk
-                .expectHeader()
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
-                .jsonPath("$[0].username").isEqualTo("username1")
-                .jsonPath("$[0].email").isEqualTo("username1@mail.com")
+                .returnResult()
+                .toString()
 
-        StepVerifier.create(userRepository.findAll())
-                .assertNext {
-                    assertEquals("username1", it.username)
-                    assertEquals("username1@mail.com", it.email)
-                }
-                .expectComplete()
-                .verify()
+        val ticket = result1.split("token".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
-        var id0 = userRepository.findAll().toStream().findFirst().get().id
-        var user2 = User(id0, "SUPER_USER", "password", "username1@mail.com")
 
-        // PUT
-        webTestClient.put().uri("/users")
+        val token = ticket[2].split("\"".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[2]
+
+        println("!!!!!!")
+        println(token)
+        println("!!!!!!")
+
+        val result = webTestClient
+                .get().uri("/test/user/jdev")
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(user2), User::class.java)
+                .header("Authorization", "Bearer $token")
                 .exchange()
                 .expectStatus().isOk
-                .expectHeader()
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
-                .jsonPath("$[0].username").isEqualTo("SUPER_USER")
-                .jsonPath("$[0].email").isEqualTo("username1@mail.com")
+                .jsonPath("username").isEqualTo("jdev")
+                .jsonPath("firstname").isEqualTo("Joe")
+                .jsonPath("lastname").isEqualTo("Developer")
+                .jsonPath("email").isEqualTo("dev@transempiric.com")
+                .returnResult()
+                .toString()
 
-        // GET ALL
-        webTestClient.get().uri("/users")
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .exchange()
-                .expectStatus().isOk
-                .expectHeader()
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .expectBody()
-                .jsonPath("$[0].username").isEqualTo("SUPER_USER")
-                .jsonPath("$[0].email").isEqualTo("username1@mail.com")
+        println(result)
 
-        var id = userRepository.findAll().toStream().findFirst().get().id
-
-        // DELETE
-        webTestClient.delete().uri("/users/$id")
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .exchange()
-                .expectStatus().isOk
-
+        logger.info(token)
     }
 
 }
