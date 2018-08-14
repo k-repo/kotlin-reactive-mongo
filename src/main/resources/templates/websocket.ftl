@@ -36,7 +36,7 @@
 
 <script type="application/javascript">
     // Use "wss://" for HTTPS
-    var socket = new WebSocket("ws://" + location.host + "/api/ws/echotest?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqZGV2IiwiYXVkIjoidW5rbm93biIsImV4cCI6MjEzNDQxMTIwMSwiaWF0IjoxNTI5NjExMjAxfQ.7uwZtkCx37zOiu7BbFR0l9LfvZhyOlfjVGzXjnSU2C1dpqqlEzHJpZDxfYYjEM_urwZwUh8Ek4c8MZ1v6hA9ag");
+    var socket = new WebSocket("ws://" + location.host + "/api/ws/echotest?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqZGV2IiwiYXVkIjoidW5rbm93biIsImV4cCI6MTUzNDMzODYyNSwiaWF0IjoxNTM0MjM4NjI1fQ.hn1nyz_mUA7mqmOOrO18Jz4x2FlTByuk82SDrOKxCdfEcEuSr2x4JQM0o4qgIIrhIvs7rQ01GIZYkpWMrLTJbA");
     addEvent("keypress", document.getElementById('input'), function(event) {
         socket.send(event.key);
     });

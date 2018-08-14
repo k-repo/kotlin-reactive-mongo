@@ -4,14 +4,18 @@ import com.example.kotlinreactivemongo.KotlinReactiveMongoApplication
 import com.example.kotlinreactivemongo.api.rest.TestRestController
 import com.example.kotlinreactivemongo.config.mongo.MongoConfiguration
 import com.example.kotlinreactivemongo.config.security.jwt.JwtAuthenticationRequest
-import com.example.kotlinreactivemongo.config.security.service.UserReactiveCrudRepository
 import com.example.kotlinreactivemongo.config.web.WebConfig
+import org.junit.Assert
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
@@ -19,15 +23,16 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
 
 @RunWith(SpringRunner::class)
-@WebFluxTest(TestRestController::class)
-//@SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(classes = arrayOf(KotlinReactiveMongoApplication::class, MongoConfiguration::class))
+@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ContextConfiguration(classes = arrayOf(KotlinReactiveMongoApplication::class,
+        WebConfig::class,
+        MongoConfiguration::class))
 class BackendApplicationTests {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
     @Autowired
-    private val webTestClient: WebTestClient? = null
+    private lateinit var webTestClient: WebTestClient
 
     @Test
     fun fetchUsers() {
@@ -47,9 +52,8 @@ class BackendApplicationTests {
 
         val token = ticket[2].split("\"".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[2]
 
-        println("!!!!!!")
-        println(token)
-        println("!!!!!!")
+        logger.info(token)
+        assertNotNull(token)
 
         val result = webTestClient
                 .get().uri("/test/user/jdev")
@@ -64,10 +68,7 @@ class BackendApplicationTests {
                 .jsonPath("email").isEqualTo("dev@transempiric.com")
                 .returnResult()
                 .toString()
-
-        println(result)
-
-        logger.info(token)
+        logger.info(result)
     }
 
 }

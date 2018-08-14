@@ -4,7 +4,9 @@ import org.springframework.security.authentication.AbstractAuthenticationToken
 
 import javax.security.auth.Subject
 
-class JwtPreAuthenticationToken(val authToken: String, val bearerRequestHeader: String, val username: String) : AbstractAuthenticationToken(null) {
+class JwtPreAuthenticationToken(val authToken: String,
+                                val bearerRequestHeader: String,
+                                val username: String) : AbstractAuthenticationToken(null) {
 
     init {
         isAuthenticated = false

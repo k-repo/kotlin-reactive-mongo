@@ -1,5 +1,7 @@
 package com.example.kotlinreactivemongo
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import org.bson.types.ObjectId
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Repository
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 import org.springframework.web.reactive.function.server.body
 import org.springframework.web.reactive.function.server.router
+import java.util.*
 
 @SpringBootApplication
 @EnableReactiveMongoRepositories
@@ -23,30 +26,35 @@ fun main(args: Array<String>) {
     runApplication<KotlinReactiveMongoApplication>(*args)
 }
 
-//@Document
-//data class User(@Id val id: String = ObjectId().toString(), val username: String, val password: String,  val email:String)
-//
-//@Repository
-//interface UserRepository : ReactiveMongoRepository<User,String>
-//
+@Document
+data class Task(@Id
+                @field:JsonSerialize(using = ToStringSerializer::class)
+                val id: ObjectId = ObjectId(),
+                val name: String,
+                val dateBegin: Date,
+                val dateEnd: Date)
 
-//@Configuration
-//class ApiRouter(private val userRepository: UserRepository) {
-//    @Bean
-//    fun api() = router {
-//        "/users".nest {
-//            GET("/") {
-//                ok().body(userRepository.findAll(), User::class.java)
-//            }
-//            POST("/") {
-//                ok().body(userRepository.insert(it.bodyToMono(User::class.java)), User::class.java)
-//            }
-//            PUT("/") {
-//                ok().body(userRepository.saveAll(it.bodyToMono(User::class.java)), User::class.java)
-//            }
-//            DELETE("/{id}") {
-//                ok().body(userRepository.deleteById(it.pathVariable("id")))
-//            }
-//        }
-//    }
-//}
+@Repository
+interface TaskRepository : ReactiveMongoRepository<Task,String>
+
+
+@Configuration
+class ApiRouter(private val taskRepository: TaskRepository) {
+    @Bean
+    fun api() = router {
+        "/api/rest/tasks".nest {
+            GET("/") {
+                ok().body(taskRepository.findAll(), Task::class.java)
+            }
+            POST("/") {
+                ok().body(taskRepository.insert(it.bodyToMono(Task::class.java)), Task::class.java)
+            }
+            PUT("/") {
+                ok().body(taskRepository.saveAll(it.bodyToMono(Task::class.java)), Task::class.java)
+            }
+            DELETE("/{id}") {
+                ok().body(taskRepository.deleteById(it.pathVariable("id")))
+            }
+        }
+    }
+}
