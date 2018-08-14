@@ -1,6 +1,5 @@
 # JACKSON
 spring:
-
   jackson:
     serialization:
       INDENT_OUTPUT: true
@@ -13,6 +12,8 @@ spring:
   devtools:
     livereload:
       enabled: true
+    restart:
+      additional-paths: templates/**
 
 jwt:
   header: Authorization
