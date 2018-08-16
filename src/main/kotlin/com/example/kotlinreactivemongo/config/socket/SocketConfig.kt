@@ -10,8 +10,7 @@ import org.springframework.web.reactive.socket.server.WebSocketService
 import org.springframework.web.reactive.socket.server.support.HandshakeWebSocketService
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter
 import org.springframework.web.reactive.socket.server.upgrade.ReactorNettyRequestUpgradeStrategy
-
-import java.util.HashMap
+import java.util.*
 
 @Configuration
 class WebSocketRouter {

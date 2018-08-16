@@ -1,14 +1,14 @@
-package com.example.kotlinreactivemongo.config.security
+package com.example.kotlinreactivemongo.config.security.auth
 
 import com.example.kotlinreactivemongo.config.security.jwt.JwtAuthenticationToken
 import com.example.kotlinreactivemongo.config.security.jwt.JwtPreAuthenticationToken
 import com.example.kotlinreactivemongo.config.security.jwt.JwtTokenUtil
+import com.example.kotlinreactivemongo.domain.security.repository.UserReactiveDetailsService
 import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.ReactiveUserDetailsService
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -19,7 +19,7 @@ import reactor.core.scheduler.Schedulers
 import java.util.function.Supplier
 
 @Component
-class CustomReactiveAuthenticationManager(private val userDetailsService: ReactiveUserDetailsService, private val jwtTokenUtil: JwtTokenUtil) : ReactiveAuthenticationManager {
+class CustomReactiveAuthenticationManager(private val userDetailsService: UserReactiveDetailsService, private val jwtTokenUtil: JwtTokenUtil) : ReactiveAuthenticationManager {
     private val logger = LoggerFactory.getLogger(this.javaClass)
     private var passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder()
 

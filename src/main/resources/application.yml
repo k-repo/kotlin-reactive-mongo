@@ -28,13 +28,13 @@ jwt:
       refresh: refresh
 
 # SSL configuration
-#server:
-#  port: 8443
-#  ssl:
-#    enabled: false
-#    key-store: classpath:ssl/templatestore.jks
-#    key-store-password: qwerty
-#    key-password: qwerty
+server:
+  port: 8443
+  ssl:
+    enabled: false
+    key-store: classpath:ssl/templatestore.jks
+    key-store-password: qwerty
+    key-password: qwerty
 
 # Actuator
 management:

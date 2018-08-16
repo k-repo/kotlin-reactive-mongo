@@ -1,15 +1,14 @@
-package com.example.kotlinreactivemongo.config.security.model
+package com.example.kotlinreactivemongo.domain.security.model
 
 import com.example.kotlinreactivemongo.config.security.errors.UserServiceException
-import org.springframework.http.HttpStatus
-import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonInclude.Include
+import org.springframework.http.HttpStatus
 
 
 @JsonInclude(Include.NON_NULL)
 data class Address(val streetNumber: Int?, val streetName: String?, val city: String?, val zipcode: String?, val stateOrProvince: String?,
                    val country: String?) {
-
 
 
     class Builder(private val country: String?) {

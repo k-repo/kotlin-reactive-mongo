@@ -1,24 +1,23 @@
 package com.example.kotlinreactivemongo.api.rest
 
 import com.example.kotlinreactivemongo.config.security.errors.UserServiceException
-import com.example.kotlinreactivemongo.config.security.model.User
-import com.example.kotlinreactivemongo.config.security.service.UserReactiveCrudRepository
+import com.example.kotlinreactivemongo.domain.security.model.User
+import com.example.kotlinreactivemongo.domain.security.repository.UserReactiveCrudRepository
 import org.bson.types.ObjectId
-import org.reactivestreams.Publisher
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.web.bind.annotation.*
-import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
-
-import javax.validation.Valid
-import java.net.URI
-
-import java.lang.String.format
 import org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE
+import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.*
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod.*
+import org.springframework.web.bind.annotation.RestController
+import reactor.core.publisher.Mono
+import java.lang.String.format
+import java.net.URI
+import javax.validation.Valid
 
 @RestController
 @RequestMapping(path = arrayOf("/api/rest/user"), produces = arrayOf(APPLICATION_JSON_UTF8_VALUE))
@@ -32,7 +31,7 @@ class UserRestController(private val repo: UserReactiveCrudRepository) {
      *
      * @return HTTP 200 if users found or HTTP 204 otherwise.
      */
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = arrayOf(GET))
     fun allUsers(): Mono<ResponseEntity<List<User>>> {
 
@@ -64,7 +63,7 @@ class UserRestController(private val repo: UserReactiveCrudRepository) {
                                 "User already exists, to update an existing user use PUT instead.")
                     }
 
-                    repo.save(newUser).map { saved -> created(URI.create(format("/users/%s", saved.id))).body(saved)}
+                    repo.save(newUser).map { saved -> created(URI.create(format("/users/%s", saved.id))).body(saved) }
                 }
     }
 
@@ -122,19 +121,4 @@ class UserRestController(private val repo: UserReactiveCrudRepository) {
                 .switchIfEmpty(noContent)
     }
 
-    @PostMapping("/create")
-    internal fun create(@RequestBody userStream: Publisher<User>): Mono<Void> {
-        return this.repo.saveAll(userStream).then()
-    }
-
-    @GetMapping("/list")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    internal fun list(): Flux<User> {
-        return this.repo.findAll()
-    }
-
-    @GetMapping("/{id}")
-    internal fun findById(@PathVariable id: ObjectId): Mono<User> {
-        return this.repo.findById(id)
-    }
 }

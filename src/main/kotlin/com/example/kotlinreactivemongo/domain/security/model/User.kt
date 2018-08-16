@@ -1,16 +1,15 @@
-package com.example.kotlinreactivemongo.config.security.model
+package com.example.kotlinreactivemongo.domain.security.model
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.GrantedAuthority
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import org.springframework.security.core.userdetails.UserDetails
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.mapping.Document
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -22,7 +21,7 @@ class User @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
 constructor(
         @field:JsonSerialize(using = ToStringSerializer::class)
         //@JsonIgnore
-        var id: ObjectId?,
+        val id: ObjectId?,
         private val username: String,
         val firstname: String,
         val lastname: String,
@@ -30,8 +29,8 @@ constructor(
         private val password: String,
         var roles: List<String> = ArrayList(),
         val enabled: Boolean,
-        //@JsonIgnore
-        val lastPasswordResetDate: Date
+//        @JsonIgnore
+        var lastPasswordResetDate: Date
 ) : UserDetails {
 
     override fun getUsername(): String {
@@ -53,7 +52,7 @@ constructor(
         return true
     }
 
-    @JsonIgnore
+    //    @JsonIgnore
     override fun getPassword(): String {
         return password
     }

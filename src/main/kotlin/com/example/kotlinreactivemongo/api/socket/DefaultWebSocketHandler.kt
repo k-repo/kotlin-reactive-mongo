@@ -6,6 +6,7 @@ import java.time.Duration
 import java.util.*
 
 class DefaultWebSocketHandler : AbstractWebSocketHandler() {
+
     init {
         this.authorizedRoles?.addAll(Arrays.asList("ROLE_ADMIN"))
     }

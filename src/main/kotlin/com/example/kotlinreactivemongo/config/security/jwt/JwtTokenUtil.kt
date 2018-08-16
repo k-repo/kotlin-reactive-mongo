@@ -1,14 +1,15 @@
 package com.example.kotlinreactivemongo.config.security.jwt
 
+import io.jsonwebtoken.Claims
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.impl.DefaultClock
 import org.springframework.beans.factory.annotation.Value
-import java.io.Serializable
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.Claims
-import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
+import java.io.Serializable
 import java.util.Date
+import kotlin.collections.HashMap
 import kotlin.reflect.KFunction1
 
 @Component

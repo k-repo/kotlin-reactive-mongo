@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 
 
-
 @Configuration
 class MongoConfiguration {
     @Bean

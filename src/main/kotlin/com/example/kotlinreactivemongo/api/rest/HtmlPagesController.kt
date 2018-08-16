@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 @RequestMapping(path = arrayOf("/test"))
-class TestController {
+class HtmlPagesController {
     @GetMapping("/ws")
     fun websocket(): String {
         return "websocket"

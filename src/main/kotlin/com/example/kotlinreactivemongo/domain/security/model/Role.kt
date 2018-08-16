@@ -1,4 +1,4 @@
-package com.example.kotlinreactivemongo.config.security.model
+package com.example.kotlinreactivemongo.domain.security.model
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document

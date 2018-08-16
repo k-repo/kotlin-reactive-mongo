@@ -1,20 +1,14 @@
 package fr.kza.backend.api.web
 
 import com.example.kotlinreactivemongo.KotlinReactiveMongoApplication
-import com.example.kotlinreactivemongo.api.rest.TestRestController
 import com.example.kotlinreactivemongo.config.mongo.MongoConfiguration
 import com.example.kotlinreactivemongo.config.security.jwt.JwtAuthenticationRequest
 import com.example.kotlinreactivemongo.config.web.WebConfig
-import org.junit.Assert
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
@@ -23,7 +17,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
 
 @RunWith(SpringRunner::class)
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = arrayOf(KotlinReactiveMongoApplication::class,
         WebConfig::class,
         MongoConfiguration::class))
@@ -56,16 +50,16 @@ class BackendApplicationTests {
         assertNotNull(token)
 
         val result = webTestClient
-                .get().uri("/test/user/jdev")
+                .get().uri("/api/rest/user")
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .header("Authorization", "Bearer $token")
                 .exchange()
                 .expectStatus().isOk
                 .expectBody()
-                .jsonPath("username").isEqualTo("jdev")
-                .jsonPath("firstname").isEqualTo("Joe")
-                .jsonPath("lastname").isEqualTo("Developer")
-                .jsonPath("email").isEqualTo("dev@transempiric.com")
+                .jsonPath("[0]username").isEqualTo("jdev")
+                .jsonPath("[0]firstname").isEqualTo("Joe")
+                .jsonPath("[0]lastname").isEqualTo("Developer")
+                .jsonPath("[0]email").isEqualTo("dev@transempiric.com")
                 .returnResult()
                 .toString()
         logger.info(result)

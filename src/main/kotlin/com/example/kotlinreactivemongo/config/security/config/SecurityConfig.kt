@@ -1,5 +1,7 @@
-package com.example.kotlinreactivemongo.config.security
+package com.example.kotlinreactivemongo.config.security.config
 
+import com.example.kotlinreactivemongo.config.security.auth.UnauthorizedAuthenticationEntryPoint
+import com.example.kotlinreactivemongo.config.security.encoder.CustomPasswordEncoder
 import com.example.kotlinreactivemongo.config.security.jwt.JwtAuthenticationWebFilter
 import com.example.kotlinreactivemongo.config.security.jwt.JwtTokenUtil
 import org.springframework.context.annotation.Bean
@@ -16,7 +18,7 @@ import org.springframework.security.web.server.context.WebSessionServerSecurityC
 @Configuration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
-class SecurityConfiguration {
+class SecurityConfig {
 
     @Bean
     fun springSecurityFilterChain(http: ServerHttpSecurity,

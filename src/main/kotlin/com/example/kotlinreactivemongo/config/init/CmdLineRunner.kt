@@ -1,9 +1,9 @@
 package com.example.kotlinreactivemongo.config.init
 
-import com.example.kotlinreactivemongo.Task
-import com.example.kotlinreactivemongo.TaskRepository
-import com.example.kotlinreactivemongo.config.security.model.User
-import com.example.kotlinreactivemongo.config.security.service.UserReactiveCrudRepository
+import com.example.kotlinreactivemongo.domain.security.model.User
+import com.example.kotlinreactivemongo.domain.security.repository.UserReactiveCrudRepository
+import com.example.kotlinreactivemongo.domain.task.model.Task
+import com.example.kotlinreactivemongo.domain.task.repository.TaskRepository
 import org.bson.types.ObjectId
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
@@ -20,7 +20,7 @@ class CmdLineRunner(private val userReactiveCrudRepository: UserReactiveCrudRepo
                         "Joe",
                         "Developer",
                         "dev@transempiric.com",
-                        "{noop}dev",
+                        "jdev",
                         Arrays.asList("ROLE_ADMIN"),
                         true, Date())
         )

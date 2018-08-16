@@ -1,6 +1,6 @@
 package com.example.kotlinreactivemongo.config.security.jwt
 
-import com.example.kotlinreactivemongo.config.security.UnauthorizedAuthenticationEntryPoint
+import com.example.kotlinreactivemongo.config.security.auth.UnauthorizedAuthenticationEntryPoint
 import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter

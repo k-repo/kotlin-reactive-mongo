@@ -1,19 +1,18 @@
 package com.example.kotlinreactivemongo.config.security.jwt
 
-import com.example.kotlinreactivemongo.config.security.service.CustomReactiveUserDetailsService
+import com.example.kotlinreactivemongo.domain.security.repository.UserReactiveDetailsService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Component
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 import java.util.function.Function
 
 @Component
-class JwtAuthenticationConverter(private val userDetailService: CustomReactiveUserDetailsService,
+class JwtAuthenticationConverter(private val userDetailService: UserReactiveDetailsService,
                                  private val jwtTokenUtil: JwtTokenUtil) : Function<ServerWebExchange, Mono<Authentication>> {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)

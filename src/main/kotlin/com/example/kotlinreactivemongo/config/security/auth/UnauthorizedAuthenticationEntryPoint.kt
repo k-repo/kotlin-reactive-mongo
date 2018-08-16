@@ -1,4 +1,4 @@
-package com.example.kotlinreactivemongo.config.security
+package com.example.kotlinreactivemongo.config.security.auth
 
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.AuthenticationException
