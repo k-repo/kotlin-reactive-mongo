@@ -27,7 +27,7 @@ constructor(
         val lastname: String,
         val email: String,
         private val password: String,
-        var roles: List<String> = ArrayList(),
+        val roles: List<String> = ArrayList(),
         val enabled: Boolean,
 //        @JsonIgnore
         var lastPasswordResetDate: Date

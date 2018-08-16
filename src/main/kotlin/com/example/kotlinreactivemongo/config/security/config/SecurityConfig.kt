@@ -4,6 +4,7 @@ import com.example.kotlinreactivemongo.config.security.auth.UnauthorizedAuthenti
 import com.example.kotlinreactivemongo.config.security.encoder.CustomPasswordEncoder
 import com.example.kotlinreactivemongo.config.security.jwt.JwtAuthenticationWebFilter
 import com.example.kotlinreactivemongo.config.security.jwt.JwtTokenUtil
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
@@ -19,6 +20,9 @@ import org.springframework.security.web.server.context.WebSessionServerSecurityC
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 class SecurityConfig {
+
+    @Value("\${jwt.secret}")
+    private val secret: String? = null
 
     @Bean
     fun springSecurityFilterChain(http: ServerHttpSecurity,
@@ -63,7 +67,7 @@ class SecurityConfig {
 
     @Bean
     fun jwtTokenUtil(): JwtTokenUtil {
-        return JwtTokenUtil("test", 100000L)
+        return JwtTokenUtil(secret!!, 100000L)
     }
 
 }
