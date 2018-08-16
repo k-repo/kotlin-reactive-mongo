@@ -18,6 +18,10 @@ class ApiRouter(private val taskRepository: TaskRepository) {
                         .findAll(),
                         Task::class.java)
             }
+            GET("/{id}") {
+                ok().body(taskRepository.findById(it.pathVariable("id"))
+                        , Task::class.java)
+            }
             POST("/") {
                 ok().body(taskRepository
                         .insert(it
